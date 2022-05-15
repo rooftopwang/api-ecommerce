@@ -23,19 +23,19 @@ These are the notes from a meeting with the frontend developer that describe wha
 ## Data Shapes
 #### Product
 -  id: int
-- name: string
-- price: double
+- name: varchar
+- price: double precision
 - [OPTIONAL] category
 
 #### User
 - id: int
-- firstName: string
-- lastName: string
-- password: string
+- firstName: varchar
+- lastName: varchar
+- password: varchar
 
 #### Orders
-- id: string
-- id of each product in the order: int
+- id: int
+- id of each product in the order: int [foreign key to Product.id]
 - quantity of each product in the order: int
-- user_id: int
+- user_id: int [foreign key to User.id]
 - status of order (active or complete): int
