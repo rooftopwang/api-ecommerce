@@ -21,28 +21,54 @@ describe('User Model', ()=>{
 
     const user: User = {
         id: 1,
-        firstname: "testPassword",
-        lastname: "testPassword",
+        firstname: "testFirstName",
+        lastname: "testLastName",
         password: "testPassword"
     }
 
-    it('create method should add an user', async () => {
-        const row: User = await store.create(user)
-        expect(row).toEqual(user)
+    describe('adding an element at the beginning and removing at the end', () => {
+        beforeAll(async function(done){
+            await store.create(user)
+            done()
+        })
+
+        afterAll(async function(done){
+            await store.delete('1')
+            done()
+        })
+
+        it('index method should return a list of items', async () => {
+            const rows = await store.index()
+            expect(rows).toEqual([user])
+        })
+    
+        it('show method should should list by id', async () => {
+            const row = await store.show('1')
+            expect(row).toEqual(user)
+        })
     })
 
-    it('index method should return a list of items', async () => {
-        const rows = await store.index()
-        expect(rows).toEqual([user])
+    describe('removing the element at the end', () => {
+        afterAll(async function(done){
+            await store.delete('1')
+            done()
+        })
+
+        it('create method should add an item', async () => {
+            const row: User = await store.create(user)
+            expect(row).toEqual(user)
+        })
     })
 
-    it('show method should should list by id', async () => {
-        const row = await store.show('1')
-        expect(row).toEqual(user)
-    })
-
-    it('delete method should be able to delete item', async () => {
-        const rows = await store.delete('1')
-        expect(rows).toEqual(user)
+    describe('adding an element at the beginning', () => {
+        beforeAll(async function(done){
+            await store.create(user)
+            done()
+        })
+        
+        it('delete method should be able to delete item', async () => {
+            const rows = await store.delete('1')
+            expect(rows).toEqual(user)
+        })
     })
 })
