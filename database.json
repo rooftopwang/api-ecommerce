@@ -1,12 +1,16 @@
 {
     "dev": {
-      "driver": "pg",
-      "host": "127.0.0.1",
-      "database": "e_commerce"
+      "driver": {"ENV": "POSTGRES_DRIVER"},
+      "host": {"ENV": "POSTGRES_HOST"},
+      "database": {"ENV": "POSTGRES_DB"},
+      "user": {"ENV": "POSTGRES_USER"},
+      "password": {"ENV": "POSTGRES_PASSWORD"}
     },
     "test": {
-      "driver": "pg",
-      "host": "127.0.0.1",
-      "database": "e_commerce_test"
+      "driver": {"ENV": "POSTGRES_DRIVER"},
+      "host": {"ENV": "POSTGRES_HOST"},
+      "database": {"ENV": "POSTGRES_DB_TEST"},
+      "user": {"ENV": "POSTGRES_USER_TEST"},
+      "password": {"ENV": "POSTGRES_PASSWORD"}
     }
 }
