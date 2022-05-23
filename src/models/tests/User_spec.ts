@@ -37,14 +37,16 @@ describe('User Model', ()=>{
             done()
         })
 
-        it('index method should return a list of items', async () => {
+        it('index method should return a list of items', async (done) => {
             const rows = await store.index()
             expect(rows).toEqual([user])
+            done()
         })
     
-        it('show method should should list by id', async () => {
+        it('show method should should list by id', async (done) => {
             const row = await store.show('1')
             expect(row).toEqual(user)
+            done()
         })
     })
 
@@ -54,9 +56,10 @@ describe('User Model', ()=>{
             done()
         })
 
-        it('create method should add an item', async () => {
+        it('create method should add an item', async (done) => {
             const row: User = await store.create(user)
             expect(row).toEqual(user)
+            done()
         })
     })
 
@@ -66,9 +69,10 @@ describe('User Model', ()=>{
             done()
         })
         
-        it('delete method should be able to delete item', async () => {
+        it('delete method should be able to delete item', async (done) => {
             const rows = await store.delete('1')
             expect(rows).toEqual(user)
+            done()
         })
     })
 })

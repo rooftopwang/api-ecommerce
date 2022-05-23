@@ -3,7 +3,7 @@ import { User, UserStore }  from '../User'
 
 const store = new OrderStore(); 
 
-describe('Product Model', ()=>{
+describe('Order Model', ()=>{
     it('should have an index method', ()=>{
         expect(store.index).toBeDefined()
     })
@@ -54,14 +54,16 @@ describe('Product Model', ()=>{
             done()
         })
 
-        it('index method should return a list of items', async () => {
+        it('index method should return a list of items', async (done) => {
             const rows = await store.index()
             expect(rows).toEqual([order])
+            done()
         })
     
-        it('show method should should list by id', async () => {
+        it('show method should should list by id', async (done) => {
             const row = await store.show('1')
             expect(row).toEqual(order)
+            done()
         })
     })
 
@@ -71,9 +73,10 @@ describe('Product Model', ()=>{
             done()
         })
 
-        it('create method should add an item', async () => {
+        it('create method should add an item', async (done) => {
             const row: Order = await store.create(order)
             expect(row).toEqual(order)
+            done()
         })
     })
 
@@ -83,9 +86,10 @@ describe('Product Model', ()=>{
             done()
         })
         
-        it('delete method should be able to delete item', async () => {
+        it('delete method should be able to delete item', async (done) => {
             const rows = await store.delete('1')
             expect(rows).toEqual(order)
+            done()
         })
     })
 })
