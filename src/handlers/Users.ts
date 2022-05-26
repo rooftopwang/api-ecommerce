@@ -14,7 +14,8 @@ const show = async (req: Request, res: Response) => {
 }
 
 const create = async (req: Request, res: Response) => {
-
+    const row = await store.create(req.body)
+    res.json(row)
 }
 
 const UsersRoute = (app: express.Application) => {
