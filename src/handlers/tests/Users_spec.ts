@@ -7,31 +7,34 @@ import bcrypt from 'bcrypt'
 const request = supertest(app)
 
 describe('Handler Users', () => {
-    let token = ''
-    const user: User = {
+    
+    const admin: User = {
         id: 1, 
+        firstname: 'admin_firstname', 
+        lastname: 'admin_lastname',
+        password: 'admin_password'
+    }
+    const user: User = {
+        id: 2, 
         firstname: 'testFirstName',
         lastname: 'testLastName',
         password: 'testPassword'
     }
-    const BCRYPT_PASSWORD: string = process.env as unknown as string
-    const SALT_ROUNDS: string = process.env as unknown as string
 
-    // beforeAll(async function(done){
-    //     request.get('/authenticate')
-    //     .set({
-    //         firstname: user.firstname, 
-    //         lastname: user.lastname,
-    //         password: user.password
-    //     })
-    //     .then(data => {
-    //         token = data as unknown as string
-    //     })
+    const BCRYPT_PASSWORD: string = process.env.BCRYPT_PASSWORD as unknown as string
+    const SALT_ROUNDS: string = process.env.SALT_ROUNDS as unknown as string
 
-    //     done()
-    // })
+    beforeAll(async function(done){
+        await new UserStore().create(admin)
+        done()
+    })
 
-    describe('Testing method: /index /show: get', () => {
+    afterAll(async function(done){
+        await new UserStore().delete(admin.id.toString())
+        done()
+    })
+
+    describe('Testing get method: /index /show: ', () => {
 
         beforeAll(async function(done){
             await new UserStore().create(user)
@@ -39,20 +42,21 @@ describe('Handler Users', () => {
         })
 
         afterAll(async function(done){
-            await new UserStore().delete('1')
+            await new UserStore().delete(user.id.toString())
             done()
         })
         
         it('show shall return the first element', async (done) => {
-            request.get('/users/1')
+            request.get(`/users/${user.id.toString()}`)
             .expect('Content-Type', /json/)
             .expect(200)
             .then((data) => {
                 expect(data.body.firstname).toEqual(user.firstname)
                 expect(data.body.lastname).toEqual(user.lastname)
                 expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
+                done()
             })
-            done()
+            
         })
 
         it('index shall return all elements', async (done) => {
@@ -60,32 +64,66 @@ describe('Handler Users', () => {
             .expect('Content-Type', /json/)
             .expect(200)
             .then((data) => {
-                expect(data.body[0].firstname).toEqual(user.firstname)
-                expect(data.body[0].lastname).toEqual(user.lastname)
-                expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body[0].password)).toBe(true)
+                const users_local = [ admin, user ]
+                data.body.forEach((u: User, i: number) => {
+                    expect(u.firstname).toEqual(users_local[i].firstname)
+                    expect(u.lastname).toEqual(users_local[i].lastname)
+                    expect(bcrypt.compareSync(users_local[i].password + BCRYPT_PASSWORD, u.password)).toBe(true)
+                });
+                done()
             })
-            done()
+            
         })
     })
 
-    describe('Testing method: /users: post', () => {
-        afterAll(async function(done) {
-            await new UserStore().delete(user.id.toString())
-            done()
-        })
+    // describe('all should fail if not being authenticated: ', () => {
 
-        // creating a user does not require authenticate
-        it('create method should add a new element', async (done) => {
-            request.post('/users')
-            // .set('Authorization', `bearer ${token}`)
-            .send(user)
-            .expect('Content-Type', /json/)
-            .then((data) => {
-                expect(data.body.firstname).toEqual(user.firstname)
-                expect(data.body.lastname).toEqual(user.lastname)
-                expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
+    // })
+
+    describe('all should pass when being authenticated: ', () => {
+        let token = ''
+
+        describe('Testing method: /users: post', () => {
+
+            beforeAll(async function(done){
+
+                request.post('/authenticate')
+                .send({
+                    firstname: admin.firstname, 
+                    lastname: admin.lastname,
+                    password: admin.password
+                })
+                .then(data => {
+                    // @ts-ignore
+                    token = data
+                    done()
+                })
+
             })
-            done()
+            
+            afterAll(async function(done) {
+                await new UserStore().delete(user.id.toString())
+                done()
+            })
+    
+            // creating a user does not require authenticate
+            // it('create method should add a new element', async (done) => {
+                
+            //     request.post('/users')
+            //     .set('Authorization', `bearer ${token}`)
+            //     .send(user)
+            //     .expect('Content-Type', /json/)
+            //     .then((data) => {
+            //         expect(data.body.firstname).toEqual(user.firstname)
+            //         expect(data.body.lastname).toEqual(user.lastname)
+            //         console.log('********************')
+            //         console.log(data.body)
+            //         expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
+            //         done()
+            //     })
+                
+            // })
         })
     })
+
 })

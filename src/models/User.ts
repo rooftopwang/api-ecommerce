@@ -11,8 +11,8 @@ export type User = {
 
 export class UserStore {
     TABLE_NAME = 'Users'
-    BCRYPT_PASSWORD: string = process.env as unknown as string
-    SALT_ROUNDS: string = process.env as unknown as string
+    BCRYPT_PASSWORD: string = process.env.BCRYPT_PASSWORD as unknown as string
+    SALT_ROUNDS: string = process.env.SALT_ROUNDS as unknown as string
 
     async index(): Promise<User[]> {
         try {
@@ -86,9 +86,6 @@ export class UserStore {
             const result = await conn.query(sql)
             conn.release()
             
-            console.log("*******************")
-            console.log(result.rows)
-
             if(result.rows.length){
                 const user: User = result.rows[0]
                 const password_digest = user.password

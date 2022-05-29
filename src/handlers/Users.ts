@@ -62,11 +62,12 @@ const UsersRoute = (app: express.Application) => {
 
 const Authenticate = async (req: Request, res: Response) => {
     const { firstname, lastname, password } = req.body
+
     const secret: string = process.env.TOKEN_SECRET as unknown as string
     try {
-        console.log("inside test.............")
         const usr: User | null = await new UserStore().authenticate(firstname, lastname, password)
         const token: string = jwt.sign({ user: usr }, secret)
+
         res.json(token)
     } catch (err) {
         res.status(401)
