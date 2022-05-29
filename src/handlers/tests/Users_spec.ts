@@ -25,7 +25,8 @@ describe('Handler Users', () => {
     const SALT_ROUNDS: string = process.env.SALT_ROUNDS as unknown as string
 
     beforeAll(async function(done){
-        await new UserStore().create(admin)
+        const u = await new UserStore().create(admin)
+        admin.id = u.id
         done()
     })
 
@@ -37,7 +38,8 @@ describe('Handler Users', () => {
     describe('Testing get method: /index /show: ', () => {
 
         beforeAll(async function(done){
-            await new UserStore().create(user)
+            const u = await new UserStore().create(user)
+            user.id = u.id
             done()
         })
 
@@ -106,23 +108,21 @@ describe('Handler Users', () => {
                 done()
             })
     
-            // creating a user does not require authenticate
-            // it('create method should add a new element', async (done) => {
+            it('create method should add a new element', async (done) => {
                 
-            //     request.post('/users')
-            //     .set('Authorization', `bearer ${token}`)
-            //     .send(user)
-            //     .expect('Content-Type', /json/)
-            //     .then((data) => {
-            //         expect(data.body.firstname).toEqual(user.firstname)
-            //         expect(data.body.lastname).toEqual(user.lastname)
-            //         console.log('********************')
-            //         console.log(data.body)
-            //         expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
-            //         done()
-            //     })
+                request.post('/users')
+                .set('Authorization', `bearer ${token}`)
+                .send(user)
+                .expect('Content-Type', /json/)
+                .then((data) => {
+                    user.id = data.body.id
+                    expect(data.body.firstname).toEqual(user.firstname)
+                    expect(data.body.lastname).toEqual(user.lastname)
+                    expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
+                    done()
+                })
                 
-            // })
+            })
         })
     })
 

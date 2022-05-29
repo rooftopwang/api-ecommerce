@@ -32,7 +32,8 @@ describe('User Model', ()=>{
 
     describe('adding an element at the beginning and removing at the end', () => {
         beforeAll(async function(done){
-            await store.create(user)
+            const u = await store.create(user)
+            user.id = u.id
             done()
         })
 
@@ -66,6 +67,7 @@ describe('User Model', ()=>{
 
         it('create method should add an item: ', async (done) => {
             const row: User = await store.create(user)
+            user.id = row.id
             expect(row.firstname).toEqual(user.firstname)
             expect(row.lastname).toEqual(user.lastname)
             expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, row.password)).toBe(true)
@@ -75,7 +77,8 @@ describe('User Model', ()=>{
 
     describe('adding an element at the beginning: ', () => {
         beforeAll(async function(done){
-            await store.create(user)
+            const u = await store.create(user)
+            user.id = u.id
             done()
         })
         
