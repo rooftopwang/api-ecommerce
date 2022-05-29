@@ -16,10 +16,10 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
     try {
-        // const auth = req.headers.authorization as unknown as string
-        // const token: string = auth.split(' ')[1] 
-
-        // jwt.verify(token, process.env.TOKEN_SECRET as unknown as string)
+        const auth = req.headers.authorization as unknown as string
+        const token: string = auth.split(' ')[1] 
+        
+        jwt.verify(token, process.env.TOKEN_SECRET as unknown as string)
         
         const usr: User = {
             id: 0, 
@@ -65,6 +65,7 @@ const Authenticate = async (req: Request, res: Response) => {
 
     const secret: string = process.env.TOKEN_SECRET as unknown as string
     try {
+        
         const usr: User | null = await new UserStore().authenticate(firstname, lastname, password)
         const token: string = jwt.sign({ user: usr }, secret)
 

@@ -97,7 +97,7 @@ describe('Handler Users', () => {
                 })
                 .then(data => {
                     // @ts-ignore
-                    token = data
+                    token = data.body
                     done()
                 })
 
