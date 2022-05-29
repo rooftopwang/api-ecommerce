@@ -1,5 +1,6 @@
 import { User, UserStore} from '../models/User'
 import express, { Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
 
 const store = new UserStore(); 
 
@@ -14,14 +15,48 @@ const show = async (req: Request, res: Response) => {
 }
 
 const create = async (req: Request, res: Response) => {
-    const row = await store.create(req.body)
-    res.json(row)
+    try {
+        // const auth = req.headers.authorization as unknown as string
+        // const token: string = auth.split(' ')[1] 
+
+        // jwt.verify(token, process.env.TOKEN_SECRET as unknown as string)
+        
+        const usr: User = {
+            id: 0, 
+            firstname: req.body.firstname, 
+            lastname: req.body.lastname, 
+            password: req.body.password
+        }
+        const row = await store.create(req.body)
+        res.json(row)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
+
+    
 }
 
 const UsersRoute = (app: express.Application) => {
     app.get('/users', index)
     app.get('/users/:id', show)
     app.post('/users', create)
+    app.post('/authenticate', Authenticate)
 }
 
-export default UsersRoute
+const Authenticate = async (req: Request, res: Response) => {
+    const { firstname, lastname, password } = req.body
+    const secret: string = process.env.TOKEN_SECRET as unknown as string
+    try {
+        console.log("inside test.............")
+        const usr: User | null = await new UserStore().authenticate(firstname, lastname, password)
+        const token: string = jwt.sign({ user: usr }, secret)
+        res.json(token)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
+
+}
+
+export { UsersRoute, Authenticate }

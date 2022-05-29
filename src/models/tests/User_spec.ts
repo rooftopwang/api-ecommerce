@@ -1,8 +1,19 @@
+import { compareSync } from 'bcrypt';
 import { User, UserStore } from '../User'
+import bcrypt from 'bcrypt'
 
 const store = new UserStore(); 
 
 describe('User Model', ()=>{
+    const user: User = {
+        id: 1,
+        firstname: "testFirstName",
+        lastname: "testLastName",
+        password: "testPassword"
+    }
+    const BCRYPT_PASSWORD: string = process.env as unknown as string
+    const SALT_ROUNDS: string = process.env as unknown as string
+    
     it('should have an index method', ()=>{
         expect(store.index).toBeDefined()
     })
@@ -19,13 +30,6 @@ describe('User Model', ()=>{
         expect(store.delete).toBeDefined()
     })
 
-    const user: User = {
-        id: 1,
-        firstname: "testFirstName",
-        lastname: "testLastName",
-        password: "testPassword"
-    }
-
     describe('adding an element at the beginning and removing at the end', () => {
         beforeAll(async function(done){
             await store.create(user)
@@ -38,14 +42,18 @@ describe('User Model', ()=>{
         })
 
         it('index method should return a list of items', async (done) => {
-            const rows = await store.index()
-            expect(rows).toEqual([user])
+            const rows: User[] = await store.index()
+            expect(rows[0].firstname).toEqual(user.firstname)
+            expect(rows[0].lastname).toEqual(user.lastname)
+            expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, rows[0].password)).toBe(true)
             done()
         })
     
         it('show method should should list by id', async (done) => {
             const row = await store.show('1')
-            expect(row).toEqual(user)
+            expect(row.firstname).toEqual(user.firstname)
+            expect(row.lastname).toEqual(user.lastname)
+            expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, row.password)).toBe(true)
             done()
         })
     })
@@ -58,7 +66,9 @@ describe('User Model', ()=>{
 
         it('create method should add an item', async (done) => {
             const row: User = await store.create(user)
-            expect(row).toEqual(user)
+            expect(row.firstname).toEqual(user.firstname)
+            expect(row.lastname).toEqual(user.lastname)
+            expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, row.password)).toBe(true)
             done()
         })
     })
@@ -70,8 +80,10 @@ describe('User Model', ()=>{
         })
         
         it('delete method should be able to delete item', async (done) => {
-            const rows = await store.delete('1')
-            expect(rows).toEqual(user)
+            const row = await store.delete('1')
+            expect(row.firstname).toEqual(user.firstname)
+            expect(row.lastname).toEqual(user.lastname)
+            expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, row.password)).toBe(true)
             done()
         })
     })

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
-import UsersRoute from './handlers/Users'
+import { UsersRoute } from './handlers/Users'
 
 const app: express.Application = express()
 const address: string = "0.0.0.0:3000"
