@@ -8,8 +8,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Index 'products' [GET] 
 - Show: 'products/:id' [GET] 
 - Create [token required]: 'products' [POST] 
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+<!-- - [OPTIONAL] Top 5 most popular products  -->
+<!-- - [OPTIONAL] Products by category (args: product category) -->
 
 #### Users
 - Index [token required]: 'users' [GET] 
@@ -18,14 +18,14 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Orders
 - Current Order by user (args: user id)[token required]: '/orders/:id' [GET]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+<!-- - [OPTIONAL] Completed Orders by user (args: user id)[token required] -->
 
 ## Data Shapes
 #### Products
 - id: int
 - name: varchar
 - price: double precision
-- [OPTIONAL] category
+<!-- - [OPTIONAL] category -->
 
 #### Users
 - id: int

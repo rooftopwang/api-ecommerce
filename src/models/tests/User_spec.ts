@@ -7,9 +7,9 @@ const store = new UserStore();
 describe('User Model', ()=>{
     const user: User = {
         id: 3,
-        firstname: "testFirstName3",
-        lastname: "testLastName3",
-        password: "testPassword3"
+        firstname: "test_firstName_3",
+        lastname: "test_lastName_3",
+        password: "test_password_3"
     }
     const BCRYPT_PASSWORD: string = process.env.BCRYPT_PASSWORD as unknown as string
     const SALT_ROUNDS: string = process.env.BCRYPT_PASSWORD as unknown as string

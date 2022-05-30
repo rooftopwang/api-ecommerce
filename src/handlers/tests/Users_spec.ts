@@ -5,6 +5,7 @@ import app from '../../server'
 import bcrypt from 'bcrypt'
 
 const request = supertest(app)
+const userStore = new UserStore()
 
 describe('Handler Users', () => {
     
@@ -16,35 +17,35 @@ describe('Handler Users', () => {
     }
     const user: User = {
         id: 2, 
-        firstname: 'testFirstName',
-        lastname: 'testLastName',
-        password: 'testPassword'
+        firstname: 'test_firstName_2',
+        lastname: 'test_lastName_2',
+        password: 'test_password_2'
     }
 
     const BCRYPT_PASSWORD: string = process.env.BCRYPT_PASSWORD as unknown as string
     const SALT_ROUNDS: string = process.env.SALT_ROUNDS as unknown as string
 
     beforeAll(async function(done){
-        const u = await new UserStore().create(admin)
+        const u = await userStore.create(admin)
         admin.id = u.id
         done()
     })
 
     afterAll(async function(done){
-        await new UserStore().delete(admin.id.toString())
+        await userStore.delete(admin.id.toString())
         done()
     })
 
     describe('Testing get method: /index /show: ', () => {
 
         beforeAll(async function(done){
-            const u = await new UserStore().create(user)
+            const u = await userStore.create(user)
             user.id = u.id
             done()
         })
 
         afterAll(async function(done){
-            await new UserStore().delete(user.id.toString())
+            await userStore.delete(user.id.toString())
             done()
         })
         
@@ -78,25 +79,7 @@ describe('Handler Users', () => {
         })
     })
 
-    describe('all should fail if not being authenticated: ', () => {
-        // it('index method should fail: ', async (done) => {
-        //     request.get('/users')
-        //     .send(user)
-        //     .expect(401)
-        //     .then(data => {
-        //         done()
-        //     })
-        // })
-
-        // it('show method should fail: ', async (done) => {
-        //     request.get('/users/1')
-        //     .send(user)
-        //     .expect(401)
-        //     .then(data => {
-        //         done()
-        //     })
-        // })
-
+    describe('all should fail when not being authenticated: ', () => {
         it('create method should fail: ', async (done) => {
             request.post('/users')
             .send(user)
@@ -128,7 +111,7 @@ describe('Handler Users', () => {
             })
             
             afterAll(async function(done) {
-                await new UserStore().delete(user.id.toString())
+                await userStore.delete(user.id.toString())
                 done()
             })
     

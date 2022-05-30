@@ -62,7 +62,7 @@ const Authenticate = async (req: Request, res: Response) => {
     const secret: string = process.env.TOKEN_SECRET as unknown as string
     try {
         
-        const usr: User | null = await new UserStore().authenticate(firstname, lastname, password)
+        const usr: User | null = await store.authenticate(firstname, lastname, password)
         const token: string = jwt.sign({ user: usr }, secret)
 
         res.json(token)
