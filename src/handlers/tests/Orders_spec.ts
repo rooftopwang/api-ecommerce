@@ -58,52 +58,52 @@ describe('Handler Orders: ', () => {
 
     })
 
-    // describe('all should fail when not being authenticated', () => {
-    //     it('create should fail: ', async () => {
-    //         request.post('/orders')
-    //         .send(order)
-    //         .expect(401)
-    //     })
-    // })
+    describe('all should fail when not being authenticated', () => {
+        it('create should fail: ', async () => {
+            await request.post('/orders')
+            .send(order)
+            .expect(401)
+        })
+    })
 
-    // describe('all should pass when being authenticated: ', () => {
-    //     let token = ''
-    //     const admin: User = {
-    //         id: 1, 
-    //         firstname: 'admin_firstname', 
-    //         lastname: 'admin_lastname',
-    //         password: 'admin_password'
-    //     }
+    describe('all should pass when being authenticated: ', () => {
+        let token = ''
+        const admin: User = {
+            id: 1, 
+            firstname: 'admin_firstname', 
+            lastname: 'admin_lastname',
+            password: 'admin_password'
+        }
 
-    //     beforeAll(async () => {
-    //         const u = await new UserStore().create(admin)
-    //         admin.id = u.id
+        beforeAll(async () => {
+            const u = await new UserStore().create(admin)
+            admin.id = u.id
 
-    //         await request.post('/authenticate')
-    //         .send({
-    //             firstname: admin.firstname, 
-    //             lastname: admin.lastname,
-    //             password: admin.password
-    //         })
-    //         .then(data => {
-    //             token = data.body.toString()
-    //         })
-    //     })
+            await request.post('/authenticate')
+            .send({
+                firstname: admin.firstname, 
+                lastname: admin.lastname,
+                password: admin.password
+            })
+            .then(data => {
+                token = data.body.toString()
+            })
+        })
     
-    //     afterAll(async () => {
-    //         await store.delete(order.id.toString())
-    //         await new UserStore().delete(admin.id.toString())
-    //     })
+        afterAll(async () => {
+            await store.delete(order.id.toString())
+            await new UserStore().delete(admin.id.toString())
+        })
 
-    //     it('create should create an element: ', async () => {
-    //         await request.post('/orders')
-    //         .set('Authorization', `bearer ${token}`)
-    //         .send(order)
-    //         .expect('Content-Type', /json/)
-    //         .then(data => {
-    //             order.id = data.body.id
-    //             expect(data.body).toEqual(order)
-    //         })
-    //     })
-    // })
+        it('create should create an element: ', async () => {
+            await request.post('/orders')
+            .set('Authorization', `bearer ${token}`)
+            .send(order)
+            .expect('Content-Type', /json/)
+            .then(data => {
+                order.id = data.body.id
+                expect(data.body).toEqual(order)
+            })
+        })
+    })
 })
