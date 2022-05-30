@@ -13,23 +13,20 @@ const product: Product = {
 
 describe('Handler Products: ', () => {
     describe('Testing get method: /index /show: : ', () => {
-        beforeAll(async (done) => {
+        beforeAll(async () => {
             const p: Product = await store.create(product)
             product.id = p.id
-            done()
         })
     
-        afterAll(async (done) => {
+        afterAll(async () => {
             await store.delete(product.id.toString())
-            done()
         })
 
-        it('index should return all elements: ', async (done) => {
+        it('index should return all elements: ', async () => {
             request.get('/products')
             .expect('Content-Type', /json/)
             .then(data => {
                 expect(data.body).toEqual([product])
-                done()
             })
         })
     })

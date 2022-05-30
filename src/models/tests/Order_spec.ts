@@ -33,63 +33,53 @@ describe('Order Model', ()=>{
         status: 1
     }
 
-    beforeAll(async function(done) {
+    beforeAll(async function() {
         await new UserStore().create(user)
-        done()
     })
 
-    afterAll(async function(done) {
+    afterAll(async function() {
         await new UserStore().delete(user.id.toString())
-        done()
     })
 
     describe('adding an element at the beginning and removing at the end', () => {
-        beforeAll(async function(done) {
+        beforeAll(async function() {
             await store.create(order)
-            done()
         })
 
-        afterAll(async function(done) {
+        afterAll(async function() {
             await store.delete('1')
-            done()
         })
 
-        it('index method should return a list of items', async (done) => {
+        it('index method should return a list of items', async () => {
             const rows = await store.index()
             expect(rows).toEqual([order])
-            done()
         })
     
-        it('show method should should list by id', async (done) => {
+        it('show method should should list by id', async () => {
             const row = await store.show('1')
             expect(row).toEqual(order)
-            done()
         })
     })
 
     describe('removing the element at the end', () => {
-        afterAll(async function(done){
+        afterAll(async function(){
             await store.delete('1')
-            done()
         })
 
-        it('create method should add an item', async (done) => {
+        it('create method should add an item', async () => {
             const row: Order = await store.create(order)
             expect(row).toEqual(order)
-            done()
         })
     })
 
     describe('adding an element at the beginning', () => {
-        beforeAll(async function(done) {
+        beforeAll(async function() {
             await store.create(order)
-            done()
         })
         
-        it('delete method should be able to delete item', async (done) => {
+        it('delete method should be able to delete item', async () => {
             const rows = await store.delete('1')
             expect(rows).toEqual(order)
-            done()
         })
     })
 })

@@ -23,31 +23,27 @@ describe('Handler Users', () => {
 
     const BCRYPT_PASSWORD: string = process.env.BCRYPT_PASSWORD as unknown as string
 
-    beforeAll(async function(done){
+    beforeAll(async function(){
         const u = await userStore.create(admin)
         admin.id = u.id
-        done()
     })
 
-    afterAll(async function(done){
+    afterAll(async function(){
         await userStore.delete(admin.id.toString())
-        done()
     })
 
     describe('Testing get method: /index /show: ', () => {
 
-        beforeAll(async function(done){
+        beforeAll(async function(){
             const u = await userStore.create(user)
             user.id = u.id
-            done()
         })
 
-        afterAll(async function(done){
+        afterAll(async function(){
             await userStore.delete(user.id.toString())
-            done()
         })
         
-        it('show shall return the first element', async (done) => {
+        it('show shall return the first element', async () => {
             request.get(`/users/${user.id.toString()}`)
             .expect('Content-Type', /json/)
             .expect(200)
@@ -55,12 +51,11 @@ describe('Handler Users', () => {
                 expect(data.body.firstname).toEqual(user.firstname)
                 expect(data.body.lastname).toEqual(user.lastname)
                 expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
-                done()
             })
             
         })
 
-        it('index shall return all elements', async (done) => {
+        it('index shall return all elements', async () => {
             request.get('/users')
             .expect('Content-Type', /json/)
             .expect(200)
@@ -71,20 +66,16 @@ describe('Handler Users', () => {
                     expect(u.lastname).toEqual(users_local[i].lastname)
                     expect(bcrypt.compareSync(users_local[i].password + BCRYPT_PASSWORD, u.password)).toBe(true)
                 });
-                done()
             })
             
         })
     })
 
     describe('all should fail when not being authenticated: ', () => {
-        it('create method should fail: ', async (done) => {
+        it('create method should fail: ', async () => {
             request.post('/users')
             .send(user)
             .expect(401)
-            .then(() => {
-                done()
-            })
         })
     })
 
@@ -93,9 +84,9 @@ describe('Handler Users', () => {
 
         describe('testing method: /users: post', () => {
 
-            beforeAll(async function(done){
+            beforeAll(async function(){
 
-                request.post('/authenticate')
+                await request.post('/authenticate')
                 .send({
                     firstname: admin.firstname, 
                     lastname: admin.lastname,
@@ -103,19 +94,17 @@ describe('Handler Users', () => {
                 })
                 .then(data => {
                     token = data.body.toString()
-                    done()
                 })
 
             })
             
-            afterAll(async function(done) {
+            afterAll(async function() {
                 await userStore.delete(user.id.toString())
-                done()
             })
     
-            it('create method should add a new element', async (done) => {
+            it('create method should add a new element', async () => {
                 
-                request.post('/users')
+                await request.post('/users')
                 .set('Authorization', `bearer ${token}`)
                 .send(user)
                 .expect('Content-Type', /json/)
@@ -124,7 +113,6 @@ describe('Handler Users', () => {
                     expect(data.body.firstname).toEqual(user.firstname)
                     expect(data.body.lastname).toEqual(user.lastname)
                     expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
-                    done()
                 })
                 
             })
