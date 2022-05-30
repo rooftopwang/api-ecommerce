@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node src/server.ts",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "db-migrate up -e test && ENV=test jasmine-ts && db-migrate reset -e test",
-    "tsc": "tsc",
-    "reset": "db-migrate reset -e test"
+    "test": "yarn reset && db-migrate up -e test && ENV=test jasmine-ts && yarn reset",
+    "reset": "db-migrate reset -e test",
+    "tsc": "tsc"
   },
   "author": "Udacity",
   "license": "ISC",

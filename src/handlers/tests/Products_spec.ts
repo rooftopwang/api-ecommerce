@@ -1,4 +1,5 @@
 import { Product, ProductStore } from '../../models/Product'
+import { User, UserStore } from '../../models/User'
 import supertest from 'supertest'
 import app from '../../server'
 import bcrypt from 'bcrypt'
@@ -34,6 +35,55 @@ describe('Handler Products: ', () => {
             request.get(`/products/${product.id.toString()}`)
             .expect('Content-Type', /json/)
             .then(data => {
+                expect(data.body).toEqual(product)
+            })
+        })
+    })
+
+    describe('all should fail when not being authenticated', () => {
+        it('create should fail: ', async () => {
+            request.post('/products')
+            .send(product)
+            .expect(401)
+        })
+    })
+
+    describe('all should pass when being authenticated: ', () => {
+        let token = ''
+        const admin: User = {
+            id: 1, 
+            firstname: 'admin_firstname', 
+            lastname: 'admin_lastname',
+            password: 'admin_password'
+        }
+
+        beforeAll(async () => {
+            const u = await new UserStore().create(admin)
+            admin.id = u.id
+
+            await request.post('/authenticate')
+            .send({
+                firstname: admin.firstname, 
+                lastname: admin.lastname,
+                password: admin.password
+            })
+            .then(data => {
+                token = data.body.toString()
+            })
+        })
+    
+        afterAll(async () => {
+            await store.delete(product.id.toString())
+            await new UserStore().delete(admin.id.toString())
+        })
+
+        it('create should create an element: ', async () => {
+            await request.post('/products')
+            .set('Authorization', `bearer ${token}`)
+            .send(product)
+            .expect('Content-Type', /json/)
+            .then(data => {
+                product.id = data.body.id
                 expect(data.body).toEqual(product)
             })
         })
