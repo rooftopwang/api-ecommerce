@@ -34,7 +34,8 @@ describe('Order Model', ()=>{
     }
 
     beforeAll(async function() {
-        await new UserStore().create(user)
+        const u: User = await new UserStore().create(user)
+        user.id = u.id
     })
 
     afterAll(async function() {
@@ -43,11 +44,12 @@ describe('Order Model', ()=>{
 
     describe('adding an element at the beginning and removing at the end', () => {
         beforeAll(async function() {
-            await store.create(order)
+            const o: Order = await store.create(order)
+            order.id = o.id
         })
 
         afterAll(async function() {
-            await store.delete('1')
+            await store.delete(order.id.toString())
         })
 
         it('index method should return a list of items', async () => {
@@ -56,29 +58,32 @@ describe('Order Model', ()=>{
         })
     
         it('show method should should list by id', async () => {
-            const row = await store.show('1')
+            const row = await store.show(order.id.toString())
+            order.id = row.id
             expect(row).toEqual(order)
         })
     })
 
-    describe('removing the element at the end', () => {
+    describe('removing the element at the end: ', () => {
         afterAll(async function(){
-            await store.delete('1')
+            await store.delete(order.id.toString())
         })
 
         it('create method should add an item', async () => {
             const row: Order = await store.create(order)
+            order.id = row.id
             expect(row).toEqual(order)
         })
     })
 
-    describe('adding an element at the beginning', () => {
+    describe('adding an element at the beginning: ', () => {
         beforeAll(async function() {
-            await store.create(order)
+            const o: Order = await store.create(order)
+            order.id = o.id
         })
         
         it('delete method should be able to delete item', async () => {
-            const rows = await store.delete('1')
+            const rows = await store.delete(order.id.toString())
             expect(rows).toEqual(order)
         })
     })
