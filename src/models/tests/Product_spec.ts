@@ -27,7 +27,8 @@ describe('Product Model', ()=>{
 
     describe('adding an element at the beginning and removing at the end', () => {
         beforeAll(async function(){
-            await store.create(product)
+            const p: Product = await store.create(product)
+            product.id = p.id
         })
 
         afterAll(async function(){
@@ -40,29 +41,31 @@ describe('Product Model', ()=>{
         })
     
         it('show method should should list by id', async () => {
-            const row = await store.show('1')
+            const row = await store.show(product.id.toString())
             expect(row).toEqual(product)
         })
     })
 
     describe('removing the element at the end', () => {
         afterAll(async function(){
-            await store.delete('1')
+            await store.delete(product.id.toString())
         })
 
         it('create method should add an item', async () => {
             const row: Product = await store.create(product)
+            product.id = row.id
             expect(row).toEqual(product)
         })
     })
 
     describe('adding an element at the beginning', () => {
         beforeAll(async function(){
-            await store.create(product)
+            const p: Product = await store.create(product)
+            product.id = p.id
         })
         
         it('delete method should be able to delete item', async () => {
-            const rows = await store.delete('1')
+            const rows = await store.delete(product.id.toString())
             expect(rows).toEqual(product)
         })
     })

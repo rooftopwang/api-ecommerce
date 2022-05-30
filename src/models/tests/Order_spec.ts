@@ -28,7 +28,7 @@ describe('Order Model', ()=>{
     }
 
     const order: Order = {
-        id: 1,
+        id: 0,
         user_id: 1,
         status: 1
     }

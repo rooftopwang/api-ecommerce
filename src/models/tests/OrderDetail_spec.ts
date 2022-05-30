@@ -23,35 +23,38 @@ describe('OrderDetail Model', ()=>{
     })
 
     const user: User = {
-        id: 1, 
-        firstname: 'testFirstName',
-        lastname: 'testLastName',
-        password: 'testPassword'
+        id: 5, 
+        firstname: 'test_firstName_5',
+        lastname: 'test_lastName_5',
+        password: 'test_password_5'
     }
 
     const order: Order = {
-        id: 1,
-        user_id: 1,
+        id: 10,
+        user_id: 5,
         status: 0
     }
 
     const product: Product = {
-        id: 1,
+        id: 2,
         name: 'productTest',
         price: 100.01
     }
 
     const orderDetail: OrderDetail = {
-        id: 1,
-        order_id: 1, 
-        product_id: 1, 
+        id: 0,
+        order_id: 10, 
+        product_id: 2, 
         quantity: 100
     }
 
     beforeAll(async function() {
-        await new UserStore().create(user)
-        await new ProductStore().create(product)
-        await new OrderStore().create(order)
+        const u: User = await new UserStore().create(user)
+        user.id = u.id
+        const p: Product = await new ProductStore().create(product)
+        product.id = p.id
+        const o: Order = await new OrderStore().create(order)
+        order.id = o.id
     })
 
     afterAll(async function() {
@@ -60,13 +63,14 @@ describe('OrderDetail Model', ()=>{
         await new ProductStore().delete(product.id.toString())
     })
 
-    describe('adding an element at the beginning and removing at the end', () => {
+    describe('adding an element at the beginning and removing at the end: ', () => {
         beforeAll(async function(){
-            await store.create(orderDetail)
+            const od: OrderDetail = await store.create(orderDetail)
+            orderDetail.id = od.id
         })
 
         afterAll(async function(){
-            await store.delete('1')
+            await store.delete(orderDetail.id.toString())
         })
 
         it('index method should return a list of items', async () => {
@@ -75,29 +79,31 @@ describe('OrderDetail Model', ()=>{
         })
     
         it('show method should should list by id', async () => {
-            const row = await store.show('1')
+            const row = await store.show(orderDetail.id.toString())
             expect(row).toEqual(orderDetail)
         })
     })
 
     describe('removing the element at the end', () => {
         afterAll(async function(){
-            await store.delete('1')
+            await store.delete(orderDetail.id.toString())
         })
 
         it('create method should add an item', async () => {
             const row: OrderDetail = await store.create(orderDetail)
+            orderDetail.id = row.id
             expect(row).toEqual(orderDetail)
         })
     })
 
     describe('adding an element at the beginning', () => {
         beforeAll(async function(){
-            await store.create(orderDetail)
+            const od: OrderDetail = await store.create(orderDetail)
+            orderDetail.id = od.id
         })
         
         it('delete method should be able to delete item', async () => {
-            const rows = await store.delete('1')
+            const rows = await store.delete(orderDetail.id.toString())
             expect(rows).toEqual(orderDetail)
         })
     })
