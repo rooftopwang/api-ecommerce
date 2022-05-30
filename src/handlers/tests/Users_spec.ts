@@ -78,14 +78,39 @@ describe('Handler Users', () => {
         })
     })
 
-    // describe('all should fail if not being authenticated: ', () => {
+    describe('all should fail if not being authenticated: ', () => {
+        // it('index method should fail: ', async (done) => {
+        //     request.get('/users')
+        //     .send(user)
+        //     .expect(401)
+        //     .then(data => {
+        //         done()
+        //     })
+        // })
 
-    // })
+        // it('show method should fail: ', async (done) => {
+        //     request.get('/users/1')
+        //     .send(user)
+        //     .expect(401)
+        //     .then(data => {
+        //         done()
+        //     })
+        // })
+
+        it('create method should fail: ', async (done) => {
+            request.post('/users')
+            .send(user)
+            .expect(401)
+            .then(() => {
+                done()
+            })
+        })
+    })
 
     describe('all should pass when being authenticated: ', () => {
         let token = ''
 
-        describe('Testing method: /users: post', () => {
+        describe('testing method: /users: post', () => {
 
             beforeAll(async function(done){
 
@@ -96,8 +121,7 @@ describe('Handler Users', () => {
                     password: admin.password
                 })
                 .then(data => {
-                    // @ts-ignore
-                    token = data.body
+                    token = data.body.toString()
                     done()
                 })
 

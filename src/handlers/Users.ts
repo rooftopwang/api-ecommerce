@@ -1,6 +1,7 @@
 import { User, UserStore} from '../models/User'
 import express, { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import { verifyAuthToken } from './Helpers';
 
 const store = new UserStore(); 
 
@@ -16,11 +17,6 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
     try {
-        const auth = req.headers.authorization as unknown as string
-        const token: string = auth.split(' ')[1] 
-        
-        jwt.verify(token, process.env.TOKEN_SECRET as unknown as string)
-        
         const usr: User = {
             id: 0, 
             firstname: req.body.firstname, 
@@ -55,7 +51,7 @@ const admin = async (req: Request, res: Response) => {
 const UsersRoute = (app: express.Application) => {
     app.get('/users', index)
     app.get('/users/:id', show)
-    app.post('/users', create)
+    app.post('/users', verifyAuthToken, create)
     app.get('/admin', admin)
     app.post('/authenticate', Authenticate)
 }
