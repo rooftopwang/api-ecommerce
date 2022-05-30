@@ -1,4 +1,3 @@
-import { UsersRoute } from '../Users'
 import { User, UserStore } from '../../models/User'
 import supertest from 'supertest'
 import app from '../../server'
@@ -23,7 +22,6 @@ describe('Handler Users', () => {
     }
 
     const BCRYPT_PASSWORD: string = process.env.BCRYPT_PASSWORD as unknown as string
-    const SALT_ROUNDS: string = process.env.SALT_ROUNDS as unknown as string
 
     beforeAll(async function(done){
         const u = await userStore.create(admin)
