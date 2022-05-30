@@ -29,5 +29,13 @@ describe('Handler Products: ', () => {
                 expect(data.body).toEqual([product])
             })
         })
+
+        it('show should return the specified element: ', async () => {
+            request.get(`/products/${product.id.toString()}`)
+            .expect('Content-Type', /json/)
+            .then(data => {
+                expect(data.body).toEqual(product)
+            })
+        })
     })
 })
