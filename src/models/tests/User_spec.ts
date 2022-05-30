@@ -12,7 +12,6 @@ describe('User Model', ()=>{
         password: "test_password_3"
     }
     const BCRYPT_PASSWORD: string = process.env.BCRYPT_PASSWORD as unknown as string
-    const SALT_ROUNDS: string = process.env.BCRYPT_PASSWORD as unknown as string
     
     it('should have an index method', ()=>{
         expect(store.index).toBeDefined()

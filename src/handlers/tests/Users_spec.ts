@@ -44,7 +44,7 @@ describe('Handler Users', () => {
         })
         
         it('show shall return the first element', async () => {
-            request.get(`/users/${user.id.toString()}`)
+            await request.get(`/users/${user.id.toString()}`)
             .expect('Content-Type', /json/)
             .expect(200)
             .then((data) => {
@@ -56,7 +56,7 @@ describe('Handler Users', () => {
         })
 
         it('index shall return all elements', async () => {
-            request.get('/users')
+            await request.get('/users')
             .expect('Content-Type', /json/)
             .expect(200)
             .then((data) => {
@@ -73,7 +73,7 @@ describe('Handler Users', () => {
 
     describe('all should fail when not being authenticated: ', () => {
         it('create method should fail: ', async () => {
-            request.post('/users')
+            await request.post('/users')
             .send(user)
             .expect(401)
         })

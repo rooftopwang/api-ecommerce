@@ -8,7 +8,7 @@ const request = supertest(app)
 const store = new ProductStore()
 const product: Product = {
     id: 0,
-    name: 'test_product',
+    name: 'test_product_1',
     price: 10.1
 }
 
@@ -24,7 +24,7 @@ describe('Handler Products: ', () => {
         })
 
         it('index should return all elements: ', async () => {
-            request.get('/products')
+            await request.get('/products')
             .expect('Content-Type', /json/)
             .then(data => {
                 expect(data.body).toEqual([product])
@@ -32,7 +32,7 @@ describe('Handler Products: ', () => {
         })
 
         it('show should return the specified element: ', async () => {
-            request.get(`/products/${product.id.toString()}`)
+            await request.get(`/products/${product.id.toString()}`)
             .expect('Content-Type', /json/)
             .then(data => {
                 expect(data.body).toEqual(product)
@@ -42,7 +42,7 @@ describe('Handler Products: ', () => {
 
     describe('all should fail when not being authenticated', () => {
         it('create should fail: ', async () => {
-            request.post('/products')
+            await request.post('/products')
             .send(product)
             .expect(401)
         })
