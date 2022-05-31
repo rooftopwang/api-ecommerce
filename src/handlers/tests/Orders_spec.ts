@@ -95,31 +95,52 @@ describe('Handler Orders: ', () => {
         })
     
         afterAll(async () => {
-            await store.delete(order.id.toString())
             await new UserStore().delete(admin.id.toString())
         })
 
-        it('create should create an element: ', async () => {
-            order.product_id = product.id
-            order.user_id = user.id
+        describe('', () => {
+                    
+            afterAll(async () => {
+                await store.delete(order.id.toString())
+            })
 
-            await request.post('/orders')
-            .set('Authorization', `bearer ${token}`)
-            .send(order)
-            .expect('Content-Type', /json/)
-            .then(data => {
-                order.id = data.body.id
-                expect(data.body).toEqual(order)
+            it('create should create an element: ', async () => {
+                order.product_id = product.id
+                order.user_id = user.id
+    
+                await request.post('/orders')
+                .set('Authorization', `bearer ${token}`)
+                .send(order)
+                .expect('Content-Type', /json/)
+                .then(data => {
+                    order.id = data.body.id
+                    expect(data.body).toEqual(order)
+                })
             })
         })
 
-        it('show should return all orders by user: ', async () => {
-            await request.get(`/orders/${user.id.toString()}`)
-            .set('Authorization', `bearer ${token}`)
-            .expect('Content-Type', /json/)
-            .then(data => {
-                expect(data.body).toEqual([order])
+        describe('', () => {
+            beforeAll(async () => {
+                order.product_id = product.id
+                order.user_id = user.id
+                const o: Order = await store.create(order)
+                order.id = o.id
+            })
+        
+            afterAll(async () => {
+                await store.delete(order.id.toString())
+            })
+    
+            it('show should return all orders by user: ', async () => {
+                await request.get(`/orders/${user.id.toString()}`)
+                .set('Authorization', `bearer ${token}`)
+                .expect('Content-Type', /json/)
+                .then(data => {
+                    expect(data.body).toEqual([order])
+                })
             })
         })
+        
     })
+
 })

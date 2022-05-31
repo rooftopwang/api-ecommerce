@@ -3,6 +3,7 @@ import bodyParser from 'body-parser'
 import { UsersRoute } from './handlers/Users'
 import { ProductsRoute } from './handlers/Products'
 import { OrdersRoute } from './handlers/Orders'
+import { HelperRoutes } from './handlers/Helpers'
 
 const app: express.Application = express()
 const address: string = "0.0.0.0:3000"
@@ -13,6 +14,7 @@ app.get('/', function (req: Request, res: Response) {
     res.send('Hello World!')
 })
 
+HelperRoutes(app)
 UsersRoute(app)
 ProductsRoute(app)
 OrdersRoute(app)
