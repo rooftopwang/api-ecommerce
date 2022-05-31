@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "start": "node src/server.ts",
-    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
+    "watch": "db-migrate reset && db-migrate up && tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "test": "yarn reset && db-migrate up -e test && ENV=test jasmine-ts && yarn reset",
     "reset": "db-migrate reset -e test",
     "tsc": "tsc"
