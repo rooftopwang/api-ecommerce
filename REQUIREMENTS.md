@@ -35,13 +35,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Orders
 - id: int
-<!-- - id of each product in the order: int [foreign key to Product.id] -->
-<!-- - quantity of each product in the order: int -->
+- id of each product in the order: int [foreign key to Product.id]
+- quantity of each product in the order: int
 - user_id: int [foreign key to User.id]
 - status: (active or complete): int
-
-#### OrderDetails
-- id: int
-- order_id: [foreign key to Orders.id]
-- product_id: int [foreign key to Product.id]
-- quantity: int
