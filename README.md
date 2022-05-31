@@ -9,7 +9,7 @@ This repo contains a basic Node and Express app to get you started in constructi
 ```
 POSTGRES_DRIVER=pg
 POSTGRES_HOST=127.0.0.1
-POSTGRES_PASSWORD=7717
+POSTGRES_PASSWORD=123123
 POSTGRES_DB=e_commerce
 POSTGRES_USER=myaccount
 POSTGRES_DB_TEST=e_commerce_test
@@ -20,12 +20,19 @@ ENV=dev
 TOKEN_SECRET=jwttoken123
 ```
 
-## Postgres pgAdmin console
-### Follow the environment variables in the previous section and create account and db on pgAdmin. 
-
 ## Setup
 ### Install packages: 
 `yarn install`
+
+## Setup DataBase
+`CREATE USER myaccount WITH PASSWORD '123123'; `
+`CREATE DATABASE e_commerce; `
+`CREATE DATABASE e_commerce_test; `
+`GRANT ALL PRIVILEGES ON DATABASE e_commerce TO myaccount`
+`GRANT ALL PRIVILEGES ON DATABASE e_commerce_test TO myaccount`
+
+## Set DB
+`db-migrate up`
 
 ### To start the server: 
 `yarn watch`
@@ -34,7 +41,7 @@ TOKEN_SECRET=jwttoken123
 `yarn test`
 
 ### Visiting the following address in brower to create an admin account: 
-`http://0.0.0.0/admin`
+`http://0.0.0.0:3000/admin`
 
 ### Visiting the following address in brower to add default test cases (optional): 
-`http://0.0.0.0/testcase`
+`http://0.0.0.0:3000/testcase`
