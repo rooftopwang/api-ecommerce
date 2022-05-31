@@ -2,6 +2,7 @@ import { User, UserStore } from '../../models/User'
 import supertest from 'supertest'
 import app from '../../server'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const request = supertest(app)
 const userStore = new UserStore()
@@ -71,14 +72,6 @@ describe('Handler Users', () => {
         })
     })
 
-    describe('all should fail when not being authenticated: ', () => {
-        it('create method should fail: ', async () => {
-            await request.post('/users')
-            .send(user)
-            .expect(401)
-        })
-    })
-
     describe('all should pass when being authenticated: ', () => {
         let token = ''
 
@@ -102,17 +95,13 @@ describe('Handler Users', () => {
                 await userStore.delete(user.id.toString())
             })
     
-            it('create method should add a new element', async () => {
+            it('create method should return a valid token', async () => {
                 
                 await request.post('/users')
-                .set('Authorization', `bearer ${token}`)
                 .send(user)
                 .expect('Content-Type', /json/)
                 .then((data) => {
-                    user.id = data.body.id
-                    expect(data.body.firstname).toEqual(user.firstname)
-                    expect(data.body.lastname).toEqual(user.lastname)
-                    expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
+                    jwt.verify(data.body, process.env.TOKEN_SECRET as unknown as string)
                 })
                 
             })
