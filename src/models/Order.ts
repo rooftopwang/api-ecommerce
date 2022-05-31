@@ -67,4 +67,19 @@ export class OrderStore {
             throw new Error(`Could not delete from ${this.TABLE_NAME}: ${id}. Error: ${err}`)
         }
     }
+
+   async ordersByUser(userId: string): Promise<Order[]> {
+       try {
+           const sql: string = `SELECT * FROM ORDERS WHERE USER_ID = ${userId}`
+           // @ts-ignore
+           const conn = await Client.connect()
+           const result = await conn.query(sql)
+           const rows = result.rows
+           conn.release()
+           
+           return rows
+       } catch (err) {
+           throw err
+       }
+   }
 }

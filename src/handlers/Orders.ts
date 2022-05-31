@@ -14,6 +14,11 @@ const show = async (req: Request, res: Response) => {
     res.json(order)
 }
 
+const ordersByUser = async (req: Request, res: Response) => {
+    const orders: Order[] = await store.ordersByUser(req.params.userid)
+    res.json(orders)
+}
+
 const create = async (req: Request, res: Response) => {
     const order: Order = {
         id: req.body.id,
@@ -28,7 +33,7 @@ const create = async (req: Request, res: Response) => {
 
 const OrdersRoute = (app: express.Application) => {
     app.get('/orders', index)
-    app.get('/orders/:id', show)
+    app.get('/orders/:userid', verifyAuthToken, ordersByUser)
     app.post('/orders', verifyAuthToken, create)
 }
 

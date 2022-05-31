@@ -41,7 +41,7 @@ describe('Handler Orders: ', () => {
         await new ProductStore().delete(product.id.toString())
     })
 
-    describe('Testing get method: /index /show: ', () => {
+    describe('Testing get method: /index: ', () => {
         beforeAll(async () => {
             order.product_id = product.id
             order.user_id = user.id
@@ -60,15 +60,6 @@ describe('Handler Orders: ', () => {
                 expect(data.body).toEqual([order])
             })
         })
-
-        it('show should return the specified element: ', async () => {
-            await request.get(`/orders/${order.id.toString()}`)
-            .expect('Content-Type', /json/)
-            .then(data => {
-                expect(data.body).toEqual(order)
-            })
-        })
-
     })
 
     describe('all should fail when not being authenticated', () => {
@@ -119,6 +110,15 @@ describe('Handler Orders: ', () => {
             .then(data => {
                 order.id = data.body.id
                 expect(data.body).toEqual(order)
+            })
+        })
+
+        it('show should return all orders by user: ', async () => {
+            await request.get(`/orders/${user.id.toString()}`)
+            .set('Authorization', `bearer ${token}`)
+            .expect('Content-Type', /json/)
+            .then(data => {
+                expect(data.body).toEqual([order])
             })
         })
     })

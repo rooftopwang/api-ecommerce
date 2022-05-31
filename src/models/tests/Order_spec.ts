@@ -76,6 +76,11 @@ describe('Order Model', ()=>{
             order.id = row.id
             expect(row).toEqual(order)
         })
+
+        it('orderByUser should return correct result: ', async () => {
+            const row = await store.ordersByUser(user.id.toString())
+            expect(row).toEqual([order])
+        })
     })
 
     describe('removing the element at the end: ', () => {
