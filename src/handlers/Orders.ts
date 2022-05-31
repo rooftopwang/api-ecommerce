@@ -17,6 +17,8 @@ const show = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
     const order: Order = {
         id: req.body.id,
+        product_id: req.body.product_id, 
+        quantity: req.body.quantity,
         user_id: req.body.user_id,
         status: req.body.status
     }

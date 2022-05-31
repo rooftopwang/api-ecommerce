@@ -1,4 +1,5 @@
 import { Order, OrderStore } from '../Order'
+import { Product, ProductStore } from '../Product';
 import { User, UserStore }  from '../User'
 
 const store = new OrderStore(); 
@@ -21,29 +22,42 @@ describe('Order Model', ()=>{
     })
 
     const user: User = {
-        id: 1, 
+        id: 500, 
         firstname: 'testFirstName',
         lastname: 'testLastName',
         password: 'testPassword'
     }
 
+    const product: Product = {
+        id: 50, 
+        name: 'test_product_50',
+        price: 130.5
+    }
+
     const order: Order = {
         id: 0,
-        user_id: 1,
+        product_id: 50, 
+        quantity: 1000, 
+        user_id: 500,
         status: 1
     }
 
     beforeAll(async function() {
         const u: User = await new UserStore().create(user)
         user.id = u.id
+        const p: Product = await new ProductStore().create(product)
+        product.id = p.id
     })
 
     afterAll(async function() {
         await new UserStore().delete(user.id.toString())
+        await new ProductStore().delete(product.id.toString())
     })
 
     describe('adding an element at the beginning and removing at the end', () => {
         beforeAll(async function() {
+            order.product_id = product.id
+            order.user_id = user.id
             const o: Order = await store.create(order)
             order.id = o.id
         })
@@ -78,6 +92,8 @@ describe('Order Model', ()=>{
 
     describe('adding an element at the beginning: ', () => {
         beforeAll(async function() {
+            order.product_id = product.id
+            order.user_id = user.id
             const o: Order = await store.create(order)
             order.id = o.id
         })

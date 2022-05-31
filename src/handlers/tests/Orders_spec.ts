@@ -1,5 +1,6 @@
 import { Order, OrderStore } from '../../models/Order'
 import { User, UserStore } from '../../models/User'
+import { Product, ProductStore } from '../../models/Product'
 import supertest from 'supertest'
 import app from '../../server'
 
@@ -7,15 +8,23 @@ const request = supertest(app)
 const store = new OrderStore()
 
 const user: User = {
-    id: 15,
-    firstname: 'test_firstname_15',
-    lastname: 'test_lastname_15',
-    password: 'test_password_15'
+    id: 150,
+    firstname: 'test_firstname_150',
+    lastname: 'test_lastname_150',
+    password: 'test_password_150'
+}
+
+const product: Product = {
+    id: 300,
+    name: 'test_product_300',
+    price: 233
 }
 
 const order: Order = {
-    id: 0,
-    user_id: 15,
+    id: 180,
+    product_id: 300,
+    quantity: 666, 
+    user_id: 150,
     status: 1
 }
 
@@ -23,20 +32,24 @@ describe('Handler Orders: ', () => {
     beforeAll(async () => {
         const u: User = await new UserStore().create(user)
         user.id = u.id
+        const p: Product = await new ProductStore().create(product)
+        product.id = p.id
     })
 
     afterAll(async () => {
         await new UserStore().delete(user.id.toString())
+        await new ProductStore().delete(product.id.toString())
     })
 
     describe('Testing get method: /index /show: ', () => {
         beforeAll(async () => {
+            order.product_id = product.id
+            order.user_id = user.id
             const o: Order = await store.create(order)
             order.id = o.id
         })
     
         afterAll(async () => {
-
             await store.delete(order.id.toString())
         })
 
@@ -96,6 +109,9 @@ describe('Handler Orders: ', () => {
         })
 
         it('create should create an element: ', async () => {
+            order.product_id = product.id
+            order.user_id = user.id
+
             await request.post('/orders')
             .set('Authorization', `bearer ${token}`)
             .send(order)

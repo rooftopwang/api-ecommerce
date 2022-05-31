@@ -2,7 +2,6 @@ import { Product, ProductStore } from '../../models/Product'
 import { User, UserStore } from '../../models/User'
 import supertest from 'supertest'
 import app from '../../server'
-import bcrypt from 'bcrypt'
 
 const request = supertest(app)
 const store = new ProductStore()
