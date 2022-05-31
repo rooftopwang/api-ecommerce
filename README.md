@@ -27,11 +27,14 @@ TOKEN_SECRET=jwttoken123
 ### Install packages: 
 `yarn install`
 
-To start the server: 
+### To start the server: 
 `yarn watch`
 
-Visiting the following address in brower to create an admin account: 
+### To run test
+`yarn test`
+
+### Visiting the following address in brower to create an admin account: 
 `http://0.0.0.0/admin`
 
-Visiting the following address in brower to add default test cases (optional): 
+### Visiting the following address in brower to add default test cases (optional): 
 `http://0.0.0.0/testcase`
