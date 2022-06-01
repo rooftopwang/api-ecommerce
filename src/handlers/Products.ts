@@ -5,13 +5,23 @@ import { verifyAuthToken } from "./Helpers"
 const store = new ProductStore()
 
 const index = async (req: Request, res: Response) => {
-    const products: Product[] = await store.index()
-    res.json(products)
+    try {
+        const products: Product[] = await store.index()
+        res.json(products)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
 }
 
 const show = async (req: Request, res: Response) => {
-    const product: Product = await store.show(req.params.id)
-    res.json(product)
+    try {
+        const product: Product = await store.show(req.params.id)
+        res.json(product)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
 }
 
 const create = async (req: Request, res: Response) => {
@@ -20,8 +30,14 @@ const create = async (req: Request, res: Response) => {
         name: req.body.name,
         price: req.body.price
     }
-    const row: Product = await store.create(product)
-    res.json(row)
+
+    try {
+        const row: Product = await store.create(product)
+        res.json(row)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
 }
 
 const ProductsRoute = (app: express.Application) => {

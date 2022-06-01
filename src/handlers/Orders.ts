@@ -5,18 +5,33 @@ import { verifyAuthToken } from "./Helpers"
 const store = new OrderStore()
 
 const index = async (req: Request, res: Response) => {
-    const orders: Order[] = await store.index()
-    res.json(orders)
+    try {
+        const orders: Order[] = await store.index()
+        res.json(orders)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
 }
 
 const show = async (req: Request, res: Response) => {
-    const order: Order = await store.show(req.params.id)
-    res.json(order)
+    try {
+        const order: Order = await store.show(req.params.id)
+        res.json(order)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
 }
 
 const ordersByUser = async (req: Request, res: Response) => {
-    const orders: Order[] = await store.ordersByUser(req.params.userid)
-    res.json(orders)
+    try {
+        const orders: Order[] = await store.ordersByUser(req.params.userid)
+        res.json(orders)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
 }
 
 const create = async (req: Request, res: Response) => {
@@ -27,8 +42,13 @@ const create = async (req: Request, res: Response) => {
         user_id: req.body.user_id,
         status: req.body.status
     }
-    const row: Order = await store.create(order)
-    res.json(row)
+    try {
+        const row: Order = await store.create(order)
+        res.json(row)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+    }
 }
 
 const OrdersRoute = (app: express.Application) => {
