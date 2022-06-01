@@ -33,71 +33,72 @@ describe('Handler Users', () => {
         await userStore.delete(admin.id.toString())
     })
 
-    describe('Testing get method: /index /show: ', () => {
-
-        beforeAll(async function(){
-            const u = await userStore.create(user)
-            user.id = u.id
-        })
-
-        afterAll(async function(){
-            await userStore.delete(user.id.toString())
-        })
-        
-        it('show shall return the first element', async () => {
-            await request.get(`/users/${user.id.toString()}`)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .then((data) => {
-                expect(data.body.firstname).toEqual(user.firstname)
-                expect(data.body.lastname).toEqual(user.lastname)
-                expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
-            })
-            
-        })
-
-        it('index shall return all elements', async () => {
-            await request.get('/users')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .then((data) => {
-                const users_local = [ admin, user ]
-                data.body.forEach((u: User, i: number) => {
-                    expect(u.firstname).toEqual(users_local[i].firstname)
-                    expect(u.lastname).toEqual(users_local[i].lastname)
-                    expect(bcrypt.compareSync(users_local[i].password + BCRYPT_PASSWORD, u.password)).toBe(true)
-                });
-            })
-            
-        })
-    })
-
     describe('all should pass when being authenticated: ', () => {
         let token = ''
 
-        describe('testing method: /users: post', () => {
+        beforeAll(async function(){
+            await request.post('/authenticate')
+            .send({
+                firstname: admin.firstname, 
+                lastname: admin.lastname,
+                password: admin.password
+            })
+            .then(data => {
+                token = data.body.toString()
+            })
+        })
+        
+        describe('Testing get method: /index /show: ', () => {
 
             beforeAll(async function(){
-
-                await request.post('/authenticate')
-                .send({
-                    firstname: admin.firstname, 
-                    lastname: admin.lastname,
-                    password: admin.password
-                })
-                .then(data => {
-                    token = data.body.toString()
-                })
-
+                const u = await userStore.create(user)
+                user.id = u.id
+            })
+    
+            afterAll(async function(){
+                await userStore.delete(user.id.toString())
             })
             
+            it('show shall return the first element', async () => {
+                await request.get(`/users/${user.id.toString()}`)
+                .set('Authorization', `bearer ${token}`)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .then((data) => {
+                    expect(data.body.firstname).toEqual(user.firstname)
+                    expect(data.body.lastname).toEqual(user.lastname)
+                    expect(bcrypt.compareSync(user.password + BCRYPT_PASSWORD, data.body.password)).toBe(true)
+                })
+                
+            })
+    
+            it('index shall return all elements', async () => {
+                await request.get('/users')
+                .set('Authorization', `bearer ${token}`)
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .then((data) => {
+                    const users_local = [ admin, user ]
+                    data.body.forEach((u: User, i: number) => {
+                        expect(u.firstname).toEqual(users_local[i].firstname)
+                        expect(u.lastname).toEqual(users_local[i].lastname)
+                        expect(bcrypt.compareSync(users_local[i].password + BCRYPT_PASSWORD, u.password)).toBe(true)
+                    });
+                })
+                
+            })
+        })
+
+        describe('testing method: /users: post', () => {
+
             afterAll(async function() {
                 await userStore.delete(user.id.toString())
             })
-    
+
             it('create method should return a valid token', async () => {
                 
                 await request.post('/users')
+                .set('Authorization', `bearer ${token}`)
                 .send(user)
                 .expect('Content-Type', /json/)
                 .then((data) => {

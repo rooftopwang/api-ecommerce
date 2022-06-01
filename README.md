@@ -41,6 +41,9 @@ DB_PORT=5432
 ### To run test
 `yarn test`
 
+### Take advantage of the following token
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJmaXJzdG5hbWUiOiJ0ZXN0X2ZpcnN0TmFtZV8yIiwibGFzdG5hbWUiOiJ0ZXN0X2xhc3ROYW1lXzIiLCJwYXNzd29yZCI6IiQyYiQxMCRoVHBNeS5oTjBiZDFSeHhSaG9ZamJPWEhTVTd4YUt2eTFXeDliYTZROGdDUXJSNDRsWGp5NiJ9LCJpYXQiOjE2NTQwNDc4MTB9.ylppsUXKw_G6FY6pW1yda8jxr3VY8BPtFI2wTOtZAMs
+
 ### Visiting the following address in brower to create an admin account: 
 `http://0.0.0.0:3000/admin`
 
