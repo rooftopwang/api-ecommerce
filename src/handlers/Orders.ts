@@ -52,7 +52,7 @@ const create = async (req: Request, res: Response) => {
 }
 
 const OrdersRoute = (app: express.Application) => {
-    app.get('/orders', index)
+    app.get('/orders', verifyAuthToken, index)
     app.get('/orders/:userid', verifyAuthToken, ordersByUser)
     app.post('/orders', verifyAuthToken, create)
 }

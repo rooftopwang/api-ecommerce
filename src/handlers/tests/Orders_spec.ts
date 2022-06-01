@@ -41,27 +41,6 @@ describe('Handler Orders: ', () => {
         await new ProductStore().delete(product.id.toString())
     })
 
-    describe('Testing get method: /index: ', () => {
-        beforeAll(async () => {
-            order.product_id = product.id
-            order.user_id = user.id
-            const o: Order = await store.create(order)
-            order.id = o.id
-        })
-    
-        afterAll(async () => {
-            await store.delete(order.id.toString())
-        })
-
-        it('index should return all elements: ', async () => {
-            await request.get('/orders')
-            .expect('Content-Type', /json/)
-            .then(data => {
-                expect(data.body).toEqual([order])
-            })
-        })
-    })
-
     describe('all should fail when not being authenticated', () => {
         it('create should fail: ', async () => {
             await request.post('/orders')
@@ -133,6 +112,28 @@ describe('Handler Orders: ', () => {
     
             it('show should return all orders by user: ', async () => {
                 await request.get(`/orders/${user.id.toString()}`)
+                .set('Authorization', `bearer ${token}`)
+                .expect('Content-Type', /json/)
+                .then(data => {
+                    expect(data.body).toEqual([order])
+                })
+            })
+        })
+
+        describe('Testing get method: /index: ', () => {
+            beforeAll(async () => {
+                order.product_id = product.id
+                order.user_id = user.id
+                const o: Order = await store.create(order)
+                order.id = o.id
+            })
+        
+            afterAll(async () => {
+                await store.delete(order.id.toString())
+            })
+    
+            it('index should return all elements: ', async () => {
+                await request.get('/orders')
                 .set('Authorization', `bearer ${token}`)
                 .expect('Content-Type', /json/)
                 .then(data => {

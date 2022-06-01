@@ -14,7 +14,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Users
 - Index [token required]: 'http://0.0.0.0:3000/users' [GET] 
 - Show [token required]: 'http://0.0.0.0:3000/users/:id' [GET] 
-- Create N[token required]: 'http://0.0.0.0:3000/users' [POST] 
+- Create 'http://0.0.0.0:3000/users' [POST] 
 
 #### Orders
 - Current Order by user (args: user id)[token required]: 'http://0.0.0.0:3000/orders/:userid' [GET]

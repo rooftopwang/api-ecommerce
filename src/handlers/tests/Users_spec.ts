@@ -33,6 +33,24 @@ describe('Handler Users', () => {
         await userStore.delete(admin.id.toString())
     })
 
+    describe('testing method: /users: post', () => {
+
+        afterAll(async function() {
+            await userStore.delete(user.id.toString())
+        })
+
+        it('create method should return a valid token', async () => {
+            
+            await request.post('/users')
+            .send(user)
+            .expect('Content-Type', /json/)
+            .then((data) => {
+                jwt.verify(data.body, process.env.TOKEN_SECRET as unknown as string)
+            })
+            
+        })
+    })
+    
     describe('all should pass when being authenticated: ', () => {
         let token = ''
 
@@ -84,25 +102,6 @@ describe('Handler Users', () => {
                         expect(u.lastname).toEqual(users_local[i].lastname)
                         expect(bcrypt.compareSync(users_local[i].password + BCRYPT_PASSWORD, u.password)).toBe(true)
                     });
-                })
-                
-            })
-        })
-
-        describe('testing method: /users: post', () => {
-
-            afterAll(async function() {
-                await userStore.delete(user.id.toString())
-            })
-
-            it('create method should return a valid token', async () => {
-                
-                await request.post('/users')
-                .set('Authorization', `bearer ${token}`)
-                .send(user)
-                .expect('Content-Type', /json/)
-                .then((data) => {
-                    jwt.verify(data.body, process.env.TOKEN_SECRET as unknown as string)
                 })
                 
             })
